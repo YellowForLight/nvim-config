@@ -1,0 +1,82 @@
+return {
+	"nvim-treesitter/nvim-treesitter",
+	main = "nvim-treesitter.configs",
+	build = ":TSUpdate",
+	opts = {
+		ensure_installed = {"scala", "javascript", "typescript", "lua", "vim", "vimdoc"},
+		auto_install = true,
+		highlight = {
+			enable = true
+		},
+		incremental_selection = {
+			enable = true,
+			keymaps = {
+				init_selection = "<CR>",
+				scope_incremental = "<CR>",
+				node_incremental = "<TAB>",
+				node_decremental = "<S-TAB>",
+			}
+		},
+		context_commentstring = {
+			enable = true
+		},
+		textobjects = {
+			select = {
+				enable = true,
+				lookahead = true,
+				keymaps = {
+					['aa'] = "@parameter.outer",
+					['ia'] = "@parameter.inner",
+					['af'] = "@function.outer",
+					['if'] = "@function.inner",
+					['ac'] = "@class.outer",
+					['ic'] = "@class.inner",
+					['ai'] = "@conditional.outer",
+					['ii'] = "@conditional.inner",
+					['al'] = "@loop.outer",
+					['il'] = "@loop.inner",
+					['as'] = "@statement.outer",
+					['is'] = "@statement.inner"
+				}
+			},
+			move = {
+				enable = true,
+				set_jumps = true,
+				goto_next_start = {
+					[']m'] = "@function.outer",
+					[']['] = "@class.outer"
+				},
+				goto_next_end = {
+					[']M'] = "@function.outer",
+					[']]'] = "@class.outer"
+				},
+				goto_previous_start = {
+					['[m'] = "@function.outer",
+					['[['] = "@class.outer"
+				},
+				goto_previous_end = {
+					['[M'] = "@function.outer",
+					['[]'] = "@class.outer"
+				}
+			},
+			swap = {
+				enable = true,
+				swap_next = {
+					['<leader>a'] = "@parameter.inner"
+				},
+				swap_previous = {
+					['<leader>A'] = "@parameter.inner"
+				}
+			}
+		}
+
+	},
+	dependencies = {
+		{
+			"nvim-treesitter/nvim-treesitter-context",
+			opts = {}
+		} ,
+		"JoosepAlviste/nvim-ts-context-commentstring",
+		"nvim-treesitter/nvim-treesitter-textobjects"
+	}
+}
