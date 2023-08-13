@@ -24,7 +24,9 @@ local function setKey(keys)
 end
 
 local function clearKey()
-	vim.fn.jobstart([[hidutil property --set '{"UserKeyMapping":[]] .. json .. [[]}']])
+	vim.fn.jobstart([[hidutil property --set '{"UserKeyMapping":[]] .. json .. [[]}']], {
+        detach = true
+    })
 end
 
 vim.api.nvim_create_autocmd({ "FocusGained", "VimResume" }, {
