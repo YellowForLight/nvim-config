@@ -94,10 +94,6 @@ return {
                 vim.g.matchup_matchparen_hi_surround_always = 1
             end
         },
-        {
-            "m4xshen/autoclose.nvim",
-            opts = {}
-        },
         "windwp/nvim-ts-autotag"
 	}
 }

@@ -4,11 +4,20 @@ local masonLspconfig = require("mason-lspconfig")
 require("mason").setup()
 masonLspconfig.setup()
 
+local function trouble(str, opt)
+    return function()
+        require("trouble")[str or "open"](opt)
+    end
+end
+
 local options = { noremap = true, silent = true }
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, options)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, options)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, options)
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, options)
+vim.keymap.set('n', '<leader>ld', trouble(nil, "loclist"), options)
+vim.keymap.set('n', '<leader>qd', trouble(nil, "quickfix"), options)
+vim.keymap.set('n', '<leader>wd', trouble(nil, "workspace_diagnostics"), options)
+vim.keymap.set('n', '<leader>dd', trouble(nil, "document_diagnostics"), options)
 
 local function telescope(method, opts)
 	return function()
@@ -25,6 +34,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set('n', 'gd', telescope("lsp_definitions"), bufopts)
 		vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
 		vim.keymap.set('n', 'gI', telescope("lsp_implementations"), bufopts)
+        vim.keymap.set('n', '<leader>D', telescope("lsp_type_definitions"), bufopts)
 		vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
 		vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, bufopts)
 		vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
@@ -33,7 +43,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		end, bufopts)
 		vim.keymap.set('n', '<leader>ws', telescope("lsp_workspace_symbols"), bufopts)
 		vim.keymap.set('n', '<leader>Ws', telescope("lsp_dynamic_workspace_symbols"), bufopts)
-		vim.keymap.set('n', '<leader>D', telescope("lsp_type_definitions"), bufopts)
 		vim.keymap.set('n', '<leader>ds', telescope("lsp_document_symbols"), bufopts)
 		vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
 		vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
@@ -103,6 +112,7 @@ masonLspconfig.setup_handlers(waitall {
 		})
 	end
 })
+
 do
 	local opts = coq.lsp_ensure_capabilities {
 		on_attach = function()
