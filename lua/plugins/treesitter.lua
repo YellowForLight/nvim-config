@@ -68,7 +68,14 @@ return {
 					['<leader>A'] = "@parameter.inner"
 				}
 			}
-		}
+		},
+        matchup = {
+            enable = true,
+            include_match_words = true
+        },
+        autotag = {
+            enable = true
+        }
 
 	},
 	dependencies = {
@@ -77,6 +84,20 @@ return {
 			opts = {}
 		} ,
 		"JoosepAlviste/nvim-ts-context-commentstring",
-		"nvim-treesitter/nvim-treesitter-textobjects"
+		"nvim-treesitter/nvim-treesitter-textobjects",
+        {
+            "andymass/vim-matchup",
+            init = function()
+                vim.g.matchup_matchparen_offscreen = { method = "popup" }
+                vim.g.matchup_surround_enabled = 1
+                vim.g.matchup_matchparen_deferred = 1
+                vim.g.matchup_matchparen_hi_surround_always = 1
+            end
+        },
+        {
+            "m4xshen/autoclose.nvim",
+            opts = {}
+        },
+        "windwp/nvim-ts-autotag"
 	}
 }
