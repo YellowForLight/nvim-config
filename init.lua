@@ -3,4 +3,5 @@ vim.g.maplocalleader = ' '
 
 require('pluginManager')
 require('lsp')
+require('autocommands')
 
