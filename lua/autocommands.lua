@@ -1,4 +1,4 @@
-local group = vim.api.nvim_create_augroup("esc-caps", {})
+local escGroup = vim.api.nvim_create_augroup("esc-caps", {})
 local json = ""
 local function getKeys()
 	json = ""
@@ -29,7 +29,7 @@ end
 
 vim.api.nvim_create_autocmd({ "FocusGained", "VimEnter", "VimResume" }, {
 	pattern = { "*" },
-	group = group,
+	group = escGroup,
 	callback = function()
 		getKeys()
 		setKey { ["0x700000029"] = "0x700000039",
@@ -39,6 +39,24 @@ vim.api.nvim_create_autocmd({ "FocusGained", "VimEnter", "VimResume" }, {
 
 vim.api.nvim_create_autocmd({ "FocusLost", "VimLeave", "VimSuspend" }, {
 	pattern = { "*" },
-	group = group,
+	group = escGroup,
 	callback = clearKey
+})
+
+
+
+local relGroup = vim.api.nvim_create_augroup('relative', {})
+vim.api.nvim_create_autocmd("InsertEnter", {
+    pattern = { "*" },
+    group = relGroup,
+    callback = function()
+        vim.o.rnu = false
+    end
+})
+vim.api.nvim_create_autocmd("InsertLeave", {
+    pattern = { "*" },
+    group = relGroup,
+    callback = function()
+        vim.o.rnu = true
+    end
 })

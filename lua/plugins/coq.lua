@@ -8,7 +8,10 @@ return {
 				lsp = {
 					always_on_top = {}
 				}
-			}
+			},
+            limits = {
+                completion_auto_timeout = 0.11
+            }
 		}
 	end,
 	build = ":COQdeps",
