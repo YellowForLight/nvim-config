@@ -2,6 +2,7 @@ vim.keymap.set('i', '<C-O>', '<C-\\><C-O>')
 vim.keymap.set('x', 'P', '"_dP')
 vim.keymap.set('n', '<leader>q', vim.cmd.Ex)
 vim.keymap.set('n', '<leader>/', ':noh<CR>')
+vim.keymap.set('i', '<S-BS>', '<DELETE>')
 
 vim.keymap.set('x', 'J', ":m '>+1<CR>gv=gv")
 vim.keymap.set('x', 'K', ":m '<-2<CR>gv=gv")
