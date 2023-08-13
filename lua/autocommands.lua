@@ -27,7 +27,16 @@ local function clearKey()
 	vim.fn.jobstart([[hidutil property --set '{"UserKeyMapping":[]] .. json .. [[]}']])
 end
 
-vim.api.nvim_create_autocmd({ "FocusGained", "VimEnter", "VimResume" }, {
+vim.api.nvim_create_autocmd({ "FocusGained", "VimResume" }, {
+	pattern = { "*" },
+	group = escGroup,
+	callback = function()
+		setKey { ["0x700000029"] = "0x700000039",
+			["0x700000039"] = "0x700000029" }
+	end
+})
+
+vim.api.nvim_create_autocmd({ "VimEnter" }, {
 	pattern = { "*" },
 	group = escGroup,
 	callback = function()
