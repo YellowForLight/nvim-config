@@ -1,8 +1,8 @@
 vim.keymap.set('i', '<C-O>', '<C-\\><C-O>')
 vim.keymap.set('x', 'P', '"_dP')
 vim.keymap.set('n', '<leader>Q', vim.cmd.Ex)
-vim.keymap.set('n', '<leader>G', ':G<CR>')
-vim.keymap.set('n', '<leader><leader>/', ':noh<CR>')
+vim.keymap.set('n', '<leader>G', function() vim.cmd("G") end)
+vim.keymap.set('n', '<leader><leader>/', vim.cmd.nohlsearch)
 vim.keymap.set('i', '<S-BS>', '<DELETE>')
 
 vim.keymap.set('x', 'J', ":m '>+1<CR>gv=gv")
