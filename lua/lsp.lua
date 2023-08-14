@@ -1,4 +1,3 @@
-local coq = require('coq')
 local lspconfig = require('lspconfig')
 local masonLspconfig = require("mason-lspconfig")
 require("mason").setup()
@@ -24,6 +23,7 @@ local function telescope(method, opts)
 		require("telescope.builtin")[method](opts)
 	end
 end
+
 
 vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(event)
@@ -52,9 +52,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	end
 })
 
+local group = vim.api.nvim_create_augroup("lazyLsp", {})
+
 local function wait(func)
 	return function(server)
 		vim.api.nvim_create_autocmd("FileType", {
+            group = group,
 			pattern = lspconfig[server].document_config.default_config.filetypes,
 			once = true,
 			callback = function(event)
@@ -78,23 +81,23 @@ end
 
 masonLspconfig.setup_handlers(waitall {
 	function(lspName)
-		lspconfig[lspName].setup(coq.lsp_ensure_capabilities {
+		lspconfig[lspName].setup(require('coq').lsp_ensure_capabilities {
 		})
 	end,
 	['tsserver'] = wait(function()
-		lspconfig['tsserver'].setup(coq.lsp_ensure_capabilities {
+		lspconfig['tsserver'].setup(require('coq').lsp_ensure_capabilities {
 			root_dir = lspconfig.util.root_pattern("package.json"),
 			single_file_support = false
 		})
 	end),
 	['denols'] = function()
-		lspconfig['denols'].setup {
+		lspconfig['denols'].setup(require('coq').lsp_ensure_capabilities {
 			root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc")
-		}
+		})
 	end,
 	['lua_ls'] = function()
 		require("neodev").setup({})
-		lspconfig['lua_ls'].setup(coq.lsp_ensure_capabilities {
+		lspconfig['lua_ls'].setup(require('coq').lsp_ensure_capabilities {
 		})
 	end,
 	['jdtls'] = function()
@@ -102,7 +105,7 @@ masonLspconfig.setup_handlers(waitall {
 			pattern = { 'java' },
 			group = vim.api.nvim_create_augroup("lspconfig", { clear = false }),
 			callback = function()
-				local opts = coq.lsp_ensure_capabilities {
+				local opts = require('coq').lsp_ensure_capabilities {
 					cmd = { require('mason-core.path').bin_prefix('jdtls') },
 					root_dir = vim.fs.dirname(vim.fs.find({"build.gradle", "pom.xml"}, {upward = true})[1])
 				}
@@ -114,7 +117,7 @@ masonLspconfig.setup_handlers(waitall {
 })
 
 do
-	local opts = coq.lsp_ensure_capabilities {
+	local opts = require('coq').lsp_ensure_capabilities {
 		on_attach = function()
 			vim.keymap.set("n", "<leader>wh", function()
 				require("metals").hover_worksheet()

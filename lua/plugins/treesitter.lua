@@ -2,8 +2,9 @@ return {
 	"nvim-treesitter/nvim-treesitter",
 	main = "nvim-treesitter.configs",
 	build = ":TSUpdate",
+    event = "VeryLazy",
 	opts = {
-		ensure_installed = {"scala", "javascript", "typescript", "lua", "vim", "vimdoc"},
+		ensure_installed = {"scala", "javascript", "typescript", "lua", "vim", "vimdoc", "comment"},
 		auto_install = true,
 		highlight = {
 			enable = true
@@ -75,8 +76,10 @@ return {
         },
         autotag = {
             enable = true
+        },
+        endwise = {
+            enable = true
         }
-
 	},
 	dependencies = {
 		{
@@ -94,6 +97,7 @@ return {
                 vim.g.matchup_matchparen_hi_surround_always = 1
             end
         },
-        "windwp/nvim-ts-autotag"
+        "windwp/nvim-ts-autotag",
+        "RRethy/nvim-treesitter-endwise"
 	}
 }
