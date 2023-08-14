@@ -1,6 +1,7 @@
 vim.keymap.set('i', '<C-O>', '<C-\\><C-O>')
 vim.keymap.set('x', 'P', '"_dP')
 vim.keymap.set('n', '<leader>Q', vim.cmd.Ex)
+vim.keymap.set('n', '<leader>G', ':G<CR>')
 vim.keymap.set('n', '<leader><leader>/', ':noh<CR>')
 vim.keymap.set('i', '<S-BS>', '<DELETE>')
 

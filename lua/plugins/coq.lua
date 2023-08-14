@@ -11,6 +11,9 @@ return {
 			},
             limits = {
                 completion_auto_timeout = 0.11
+            },
+            completion = {
+                skip_after = {"[", "]", "{", "}", ",", '"', "'"}
             }
 		}
 	end,

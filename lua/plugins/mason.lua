@@ -1,9 +1,13 @@
 return {
-	"williamboman/mason.nvim",
-	build = ":MasonUpdate",
+	"williamboman/mason-lspconfig.nvim",
+    opts = {},
 	dependencies = {
 		"neovim/nvim-lspconfig",
-		"williamboman/mason-lspconfig.nvim",
+        {
+            "williamboman/mason.nvim",
+            build = ":MasonUpdate",
+            opts = {}
+        },
 		"mfussenegger/nvim-dap",
 		"rcarriga/nvim-dap-ui"
 	}
