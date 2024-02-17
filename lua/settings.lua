@@ -4,7 +4,6 @@ vim.o.ari = true
 vim.o.bri = true
 vim.o.briopt = "shift:2,sbr"
 vim.o.sbr = ">>"
-vim.o.cf = true
 vim.o.cul = true
 vim.o.et = true
 vim.o.fdm = "expr"

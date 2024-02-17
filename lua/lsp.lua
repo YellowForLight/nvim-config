@@ -36,6 +36,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set('n', 'gI', telescope("lsp_implementations"), bufopts)
         vim.keymap.set('n', '<leader>D', telescope("lsp_type_definitions"), bufopts)
 		vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+		vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, bufopts)
 		vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, bufopts)
 		vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
 		vim.keymap.set('n', '<leader>wl', function()
@@ -47,49 +48,24 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
 		vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
 		vim.keymap.set('n', '<leader>cl', vim.lsp.codelens.run, bufopts)
-		vim.keymap.set('n', 'gR', telescope("lsp_references"), bufopts)
+		vim.keymap.set('n', 'gr', telescope("lsp_references"), bufopts)
 		vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, bufopts)
 	end
 })
 
 local group = vim.api.nvim_create_augroup("lazyLsp", {})
 
-local function wait(func)
-	return function(server)
-		vim.api.nvim_create_autocmd("FileType", {
-            group = group,
-			pattern = lspconfig[server].document_config.default_config.filetypes,
-			once = true,
-			callback = function(event)
-				func(server)
-				vim.api.nvim_exec_autocmds(event.event, {
-					group = "lspconfig",
-					buffer = event.buf,
-					data = event.data
-				})
-			end
-		})
-	end
-end
-
-local function waitall(table)
-	for k, v in pairs(table) do
-		table[k] = wait(v)
-	end
-	return table
-end
-
-masonLspconfig.setup_handlers(waitall {
+masonLspconfig.setup_handlers {
 	function(lspName)
 		lspconfig[lspName].setup(require('coq').lsp_ensure_capabilities {
 		})
 	end,
-	['tsserver'] = wait(function()
+	['tsserver'] = function()
 		lspconfig['tsserver'].setup(require('coq').lsp_ensure_capabilities {
 			root_dir = lspconfig.util.root_pattern("package.json"),
 			single_file_support = false
 		})
-	end),
+	end,
 	['denols'] = function()
 		lspconfig['denols'].setup(require('coq').lsp_ensure_capabilities {
 			root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc")
@@ -113,12 +89,15 @@ masonLspconfig.setup_handlers(waitall {
 			end
 
 		})
-	end
-})
+	end,
+    ['hls'] = function()
+    end
+}
 
 do
 	local opts = require('coq').lsp_ensure_capabilities {
 		on_attach = function()
+            require("metals").setup_dap()
 			vim.keymap.set("n", "<leader>wh", function()
 				require("metals").hover_worksheet()
 			end, { desc = "[W]orksheet [H]over" })
@@ -127,7 +106,9 @@ do
 			end, { desc = "Metal Commands" })
 		end,
 		settings = {
-			showImplicitArguments = true
+			showImplicitArguments = true,
+            showInferredType = true,
+            showImplicitConversionsAndClasses = true
 		}
 	}
 	vim.api.nvim_create_autocmd("FileType", {

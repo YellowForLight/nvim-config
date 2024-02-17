@@ -18,9 +18,6 @@ return {
 				node_decremental = "<S-TAB>",
 			}
 		},
-		context_commentstring = {
-			enable = true
-		},
 		textobjects = {
 			select = {
 				enable = true,
@@ -86,7 +83,6 @@ return {
 			"nvim-treesitter/nvim-treesitter-context",
 			opts = {}
 		} ,
-		"JoosepAlviste/nvim-ts-context-commentstring",
 		"nvim-treesitter/nvim-treesitter-textobjects",
         {
             "andymass/vim-matchup",
