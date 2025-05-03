@@ -60,8 +60,8 @@ masonLspconfig.setup_handlers {
 		lspconfig[lspName].setup(require('coq').lsp_ensure_capabilities {
 		})
 	end,
-	['tsserver'] = function()
-		lspconfig['tsserver'].setup(require('coq').lsp_ensure_capabilities {
+	['ts_ls'] = function()
+		lspconfig['ts_ls'].setup(require('coq').lsp_ensure_capabilities {
 			root_dir = lspconfig.util.root_pattern("package.json"),
 			single_file_support = false
 		})

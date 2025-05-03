@@ -6,6 +6,7 @@ return {
         vim.g.coq_settings = {
             auto_start = "shut-up",
             keymap = {
+                recommended = false,
                 bigger_preview = "<C-S-K>",
                 jump_to_mark = "<C-\\>"
             },

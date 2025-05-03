@@ -7,7 +7,8 @@ return {
 		ensure_installed = {"scala", "javascript", "typescript", "lua", "vim", "vimdoc", "comment"},
 		auto_install = true,
 		highlight = {
-			enable = true
+			enable = true,
+            disable = { "latex" }
 		},
 		incremental_selection = {
 			enable = true,
