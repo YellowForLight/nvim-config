@@ -1,8 +1,3 @@
-local lspconfig = require('lspconfig')
-local masonLspconfig = require("mason-lspconfig")
-require("mason").setup()
-masonLspconfig.setup()
-
 local function trouble(str, opt)
     return function()
         require("trouble")[str or "open"](opt)
@@ -53,67 +48,48 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	end
 })
 
-local group = vim.api.nvim_create_augroup("lazyLsp", {})
+local group = vim.api.nvim_create_augroup("myLsp", {})
 
-masonLspconfig.setup_handlers {
-	function(lspName)
-		lspconfig[lspName].setup(require('coq').lsp_ensure_capabilities {
-		})
-	end,
-	['ts_ls'] = function()
-		lspconfig['ts_ls'].setup(require('coq').lsp_ensure_capabilities {
-			root_dir = lspconfig.util.root_pattern("package.json"),
-			single_file_support = false
-		})
-	end,
-	['denols'] = function()
-		lspconfig['denols'].setup(require('coq').lsp_ensure_capabilities {
-			root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc")
-		})
-	end,
-	['lua_ls'] = function()
-		require("neodev").setup({})
-		lspconfig['lua_ls'].setup(require('coq').lsp_ensure_capabilities {
-		})
-	end,
-	['jdtls'] = function()
-		vim.api.nvim_create_autocmd("filetype", {
-			pattern = { 'java' },
-			group = vim.api.nvim_create_augroup("lspconfig", { clear = false }),
-			callback = function()
-				local opts = require('coq').lsp_ensure_capabilities {
-					cmd = { require('mason-core.path').bin_prefix('jdtls') },
-					root_dir = vim.fs.dirname(vim.fs.find({"build.gradle", "pom.xml"}, {upward = true})[1])
-				}
-				require('jdtls').start_or_attach(opts)
-			end
+vim.lsp.config("*", require("coq").lsp_ensure_capabilities())
 
-		})
-	end,
-    ['hls'] = function()
-    end
+vim.lsp.config("denols", {
+    single_file_support = false
+})
+
+-- vim.lsp.config("haskell-tools", {
+--     cmd = { "haskell-language-server-wrapper", "--lsp" }
+-- })
+--
+-- vim.lsp.config("jdtls", {
+--     cmd = { 'jdtls' },
+--     root_dir = vim.fs.dirname(vim.fs.find({"build.gradle", "pom.xml"}, {upward = true})[1])
+-- })
+
+mconf = {
+    on_attach = function()
+        require("metals").setup_dap()
+        vim.keymap.set("n", "<localleader>wh", function()
+            require("metals").hover_worksheet()
+        end, { desc = "[w]orksheet [h]over" })
+        vim.keymap.set("n", "<localleader><cr>", function()
+            require("telescope").extensions.metals.commands()
+        end, { desc = "metal commands" })
+    end,
+    settings = {
+        autoImportBuild = "all",
+        inlayHints = {
+            byNameParameters = {enabled = true},
+            hintsInPatternMatch = {enabled = true},
+            implicitArguments = {enabled = true},
+            implicitConversions = {enabled = true},
+            inferredTypes = {enabled = true},
+            typeParameters = {enabled = true}
+        }
+    }
 }
 
-do
-	local opts = require('coq').lsp_ensure_capabilities {
-		on_attach = function()
-            require("metals").setup_dap()
-			vim.keymap.set("n", "<leader>wh", function()
-				require("metals").hover_worksheet()
-			end, { desc = "[W]orksheet [H]over" })
-			vim.keymap.set("n", "<leader><CR>", function()
-				require("telescope").extensions.metals.commands()
-			end, { desc = "Metal Commands" })
-		end,
-		settings = {
-			showImplicitArguments = true,
-            showInferredType = true,
-            showImplicitConversionsAndClasses = true
-		}
-	}
-	vim.api.nvim_create_autocmd("FileType", {
-		pattern = { "scala", "sbt" },
-		group = vim.api.nvim_create_augroup("nvim-metals", {}),
-		callback = function() require("metals").initialize_or_attach(opts) end
-	})
-end
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = { "scala", "sbt", "mill" },
+    group = group,
+    callback = function() require("metals").initialize_or_attach(mconf) end
+})

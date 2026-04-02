@@ -8,16 +8,27 @@ vim.keymap.set('n', '<leader>T', vim.treesitter.inspect_tree)
 
 local escape = vim.api.nvim_replace_termcodes("<ESC>", true, true, true)
 local reindentSelection = vim.api.nvim_replace_termcodes("gv=gv", true, true, true)
-vim.keymap.set('x', 'J', function()
+--[[ vim.keymap.set('x', 'J', function()
     vim.api.nvim_feedkeys(escape, "x", false)
-    vim.cmd("'<,'>m '>+1")
+    vim.cmd("'<,'>m '>+" .. vim.v.count1)
     vim.api.nvim_feedkeys(reindentSelection, "m", false)
+    print(vim.v.count1)
 end)
 vim.keymap.set('x', 'K', function()
     vim.api.nvim_feedkeys(escape, "x", false)
-    vim.cmd("'<,'>m '<-2")
     vim.api.nvim_feedkeys(reindentSelection, "m", false)
-end)
+    vim.cmd("'<,'>m '<-" .. vim.v.count1+1)
+end) ]]
+vim.keymap.set('x', 'J', function()
+    return ":m '>+" .. vim.v.count1 .. "<enter>gv=gv"
+end, {
+    expr = true
+})
+vim.keymap.set('x', 'K', function()
+    return ":m '<-" .. vim.v.count1 + 1 .. "<enter>gv=gv"
+end, {
+    expr = true
+})
 
 vim.keymap.set('n', '<C-D>', '<C-D>zz')
 vim.keymap.set('n', '<C-U>', '<C-U>zz')

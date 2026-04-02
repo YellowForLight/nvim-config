@@ -10,5 +10,8 @@ return {
     dependencies = {
         "MunifTanjim/nui.nvim",
         "rcarriga/nvim-notify"
-    }
+    },
+    enabled = function()
+        return not (vim.g.started_by_firenvim == true)
+    end
 }

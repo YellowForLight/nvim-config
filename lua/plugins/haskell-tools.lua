@@ -1,16 +1,10 @@
 return {
     "mrcjkb/haskell-tools.nvim",
     init = function()
+        require("lsp")
         vim.g.haskell_tools = {
-            hls = {
-                cmd = function()
-                    local bin = require("mason-core.path").bin_prefix("haskell-language-server-wrapper")
-                    return { bin, '--lsp' }
-                end,
-                capabilities = require('coq').lsp_ensure_capabilities()
-            },
             dap = {
-                cmd = { require("mason-core.path").bin_prefix("haskell-debug-adapter") }
+                cmd = { "haskell-debug-adapter" }
             }
         }
     end,
